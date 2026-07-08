@@ -1,0 +1,16 @@
+- `[x]` Core Constants & Validators Updates
+  - `[x]` Update `src/constants/categories.js` to add income categories
+  - `[x]` Update `src/utils/validators.js` to validate income categories
+- `[x]` State Management Modifications
+  - `[x]` Update `src/context/ExpenseContext.jsx` to include type filters
+- `[x]` UI Components Updates
+  - `[x]` Update `src/components/ExpenseForm.jsx` with type tab switch and conditional categories
+  - `[x]` Update `src/components/SummaryDashboard.jsx` to show Net Balance, Income, and Expense KPIs
+  - `[x]` Update `src/components/CategoryChart.jsx` to support toggling between expense and income charts
+  - `[x]` Update `src/components/FilterBar.jsx` to add transaction type filters
+  - `[x]` Update `src/components/ExpenseItem.jsx` to style income vs expense entries
+  - `[x]` Update `src/components/ExpenseList.jsx` to filter by type
+- `[x]` Verification & Tests
+  - `[x]` Update `src/test/validators.test.js` and `src/test/reducer.test.js`
+  - `[x]` Run tests and verify success
+  - `[x]` Verify successful production build
