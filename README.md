@@ -102,3 +102,8 @@ To redeploy the site manually:
 
 ## 👤 Author
 * **Yashash Sharma** - [GitHub Profile](https://github.com/Yashash-Sharma)
+
+---
+
+## 🔮 Developed With
+This entire application was pair-programmed, designed, and fully code-vibe built using **Antigravity**, Google DeepMind's agentic AI coding assistant.
