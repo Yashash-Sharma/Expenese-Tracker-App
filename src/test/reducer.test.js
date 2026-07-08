@@ -6,7 +6,9 @@ vi.mock('../services/storageService', () => {
   return {
     default: {
       save: vi.fn(() => true),
-      load: vi.fn(() => [])
+      load: vi.fn(() => []),
+      getCurrency: vi.fn(() => 'INR'),
+      setCurrency: vi.fn()
     }
   };
 });
@@ -19,6 +21,7 @@ describe('expenseReducer', () => {
       dateRange: { start: null, end: null },
       searchText: ""
     },
+    currency: "INR",
     loading: false,
     error: null
   };
@@ -82,5 +85,12 @@ describe('expenseReducer', () => {
     const nextState = expenseReducer(initialState, action);
 
     expect(nextState.filters.category).toBe('Food');
+  });
+
+  it('should handle SET_CURRENCY', () => {
+    const action = { type: 'SET_CURRENCY', payload: { currency: 'USD' } };
+    const nextState = expenseReducer(initialState, action);
+
+    expect(nextState.currency).toBe('USD');
   });
 });

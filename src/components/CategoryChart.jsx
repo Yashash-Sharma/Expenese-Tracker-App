@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { CATEGORY_META } from '../constants/categories';
+import { useExpenses } from '../context/ExpenseContext';
+import { formatCurrency, formatCurrencyCompact } from '../constants/currencies';
 
 export default function CategoryChart({ expenses = [] }) {
   const [activeType, setActiveType] = useState('expense'); // 'expense' or 'income'
   const [activeIndex, setActiveIndex] = useState(null);
+
+  const { state } = useExpenses();
+  const { currency } = state;
 
   // Group and sum categories by selected type
   const targetExpenses = expenses.filter(exp => 
@@ -42,7 +47,7 @@ export default function CategoryChart({ expenses = [] }) {
       return (
         <div className="rounded-xl border border-slate-850 bg-slate-950/90 p-3 shadow-xl backdrop-blur-md">
           <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{data.name}</p>
-          <p className="mt-1 text-base font-bold text-slate-100">₹{data.value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+          <p className="mt-1 text-base font-bold text-slate-100">{formatCurrency(data.value, currency)}</p>
           <p className="text-xs text-emerald-450 font-medium">{percentage}% of total</p>
         </div>
       );
@@ -65,7 +70,7 @@ export default function CategoryChart({ expenses = [] }) {
             onClick={() => { setActiveType('expense'); setActiveIndex(null); }}
             className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${
               activeType === 'expense'
-                ? 'bg-rose-500/15 border border-rose-500/20 text-rose-400'
+                ? 'bg-rose-500/15 border border-rose-500/20 text-rose-450'
                 : 'text-slate-450 hover:text-slate-200'
             }`}
           >
@@ -103,7 +108,7 @@ export default function CategoryChart({ expenses = [] }) {
                 {activeIndex !== null ? chartData[activeIndex].name : "Total"}
               </span>
               <span className="text-base font-bold text-slate-100 mt-0.5 tracking-tight transition-all duration-200">
-                ₹{(activeIndex !== null ? chartData[activeIndex].value : total).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                {formatCurrency(activeIndex !== null ? chartData[activeIndex].value : total, currency)}
               </span>
               {activeIndex !== null && (
                 <span className="text-[10px] text-emerald-450 font-bold">
@@ -168,7 +173,7 @@ export default function CategoryChart({ expenses = [] }) {
                   <div className="flex flex-col min-w-0">
                     <span className="text-xs font-semibold text-slate-200 truncate leading-none">{item.name}</span>
                     <span className="text-[10px] text-slate-450 font-bold mt-1">
-                      ₹{item.value.toLocaleString(undefined, { maximumFractionDigits: 0 })} ({percentage}%)
+                      {formatCurrencyCompact(item.value, currency)} ({percentage}%)
                     </span>
                   </div>
                 </div>

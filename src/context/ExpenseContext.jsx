@@ -11,6 +11,7 @@ const initialState = {
     searchText: "",
     type: "All" // "All", "income", "expense"
   },
+  currency: storageService.getCurrency(),
   loading: false,
   error: null
 };
@@ -69,6 +70,14 @@ export function expenseReducer(state, action) {
           [action.payload.filterKey]: action.payload.value 
         } 
       };
+      
+    case 'SET_CURRENCY': {
+      storageService.setCurrency(action.payload.currency);
+      return {
+        ...state,
+        currency: action.payload.currency
+      };
+    }
       
     case 'SET_ERROR':
       return { 

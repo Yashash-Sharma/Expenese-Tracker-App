@@ -4,9 +4,11 @@ import { EXPENSE_CATEGORIES, INCOME_CATEGORIES } from '../constants/categories';
 import { validateExpense } from '../utils/validators';
 import { formatDateToISO } from '../utils/dateHelpers';
 import { Save, X, PlusCircle, ArrowDownLeft, ArrowUpRight } from 'lucide-react';
+import { CURRENCIES } from '../constants/currencies';
 
 export default function ExpenseForm({ initialData = null, onCancel = null }) {
-  const { dispatch } = useExpenses();
+  const { state, dispatch } = useExpenses();
+  const { currency } = state;
   
   const [type, setType] = useState('expense'); // 'expense' or 'income'
   const [amount, setAmount] = useState('');
@@ -15,7 +17,7 @@ export default function ExpenseForm({ initialData = null, onCancel = null }) {
   const [note, setNote] = useState('');
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
-
+  
   // Reset/populate form when initialData changes
   useEffect(() => {
     if (initialData) {
@@ -193,7 +195,7 @@ export default function ExpenseForm({ initialData = null, onCancel = null }) {
       <div className="space-y-4">
         {/* Amount */}
         <div>
-          <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Amount (₹) <span className="text-rose-500">*</span></label>
+          <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Amount ({CURRENCIES[currency]?.symbol || '₹'}) <span className="text-rose-500">*</span></label>
           <input
             type="number"
             step="0.01"

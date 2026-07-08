@@ -1,8 +1,13 @@
 import React from 'react';
 import { DollarSign, Wallet, TrendingUp, TrendingDown, Receipt } from 'lucide-react';
 import { CATEGORY_META } from '../constants/categories';
+import { useExpenses } from '../context/ExpenseContext';
+import { formatCurrency, formatCurrencyCompact } from '../constants/currencies';
 
 export default function SummaryDashboard({ expenses = [], filteredExpenses = [] }) {
+  const { state } = useExpenses();
+  const { currency } = state;
+
   // Calculate Totals based on filtered list (or overall - let's do filtered so it reacts to search/dates!)
   const incomeList = filteredExpenses.filter(e => e.type === 'income');
   const expenseList = filteredExpenses.filter(e => e.type === 'expense' || !e.type); // fallback to expense if type undefined
@@ -46,7 +51,7 @@ export default function SummaryDashboard({ expenses = [], filteredExpenses = [] 
         </div>
         <div className="mt-4">
           <h3 className={`text-2xl font-bold tracking-tight ${netBalance >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
-            {netBalance >= 0 ? '+' : '-'}₹{Math.abs(netBalance).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            {netBalance >= 0 ? '+' : '-'}{formatCurrency(Math.abs(netBalance), currency)}
           </h3>
           <p className="mt-1 text-xs text-slate-400">Income minus expenses</p>
         </div>
@@ -63,7 +68,7 @@ export default function SummaryDashboard({ expenses = [], filteredExpenses = [] 
         </div>
         <div className="mt-4">
           <h3 className="text-2xl font-bold text-slate-100 tracking-tight">
-            ₹{totalIncome.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            {formatCurrency(totalIncome, currency)}
           </h3>
           <p className="mt-1 text-xs text-slate-400">Filtered earnings</p>
         </div>
@@ -80,7 +85,7 @@ export default function SummaryDashboard({ expenses = [], filteredExpenses = [] 
         </div>
         <div className="mt-4">
           <h3 className="text-2xl font-bold text-slate-100 tracking-tight">
-            ₹{totalExpense.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            {formatCurrency(totalExpense, currency)}
           </h3>
           <p className="mt-1 text-xs text-slate-400">Filtered spending</p>
         </div>
@@ -101,7 +106,7 @@ export default function SummaryDashboard({ expenses = [], filteredExpenses = [] 
           </h3>
           <p className="mt-1 text-xs text-slate-400">
             {topCategoryAmount > 0 
-              ? `Spent: ₹${topCategoryAmount.toLocaleString(undefined, { maximumFractionDigits: 0 })}`
+              ? `Spent: ${formatCurrencyCompact(topCategoryAmount, currency)}`
               : "No expenses logged"
             }
           </p>

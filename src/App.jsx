@@ -8,7 +8,8 @@ import ExpenseForm from './components/ExpenseForm';
 import ConfirmDialog from './components/ConfirmDialog';
 import Chatbot from './components/Chatbot';
 import { isDateInRange } from './utils/dateHelpers';
-import { Wallet, Sparkles, XCircle } from 'lucide-react';
+import { Wallet, Sparkles, XCircle, Coins } from 'lucide-react';
+import { CURRENCIES } from './constants/currencies';
 
 function AppContent() {
   const { state, dispatch } = useExpenses();
@@ -97,9 +98,30 @@ function AppContent() {
               </span>
             </div>
           </div>
-          <div className="flex items-center gap-2 text-xs font-semibold text-slate-400 bg-slate-900/60 px-3.5 py-1.5 rounded-full border border-slate-800">
-            <Sparkles className="h-3.5 w-3.5 text-amber-400 animate-pulse" />
-            <span>MVP Active</span>
+          
+          <div className="flex items-center gap-3">
+            {/* Currency Selector */}
+            <div className="flex items-center gap-1.5 bg-slate-900/60 pl-3 pr-2 py-1.5 rounded-full border border-slate-800 text-xs font-semibold text-slate-400 transition-colors hover:border-slate-700">
+              <Coins className="h-3.5 w-3.5 text-sky-450 shrink-0" />
+              <span className="hidden sm:inline">Currency:</span>
+              <select
+                value={state.currency}
+                onChange={(e) => dispatch({ type: 'SET_CURRENCY', payload: { currency: e.target.value } })}
+                className="bg-transparent border-none text-slate-100 font-bold focus:outline-none cursor-pointer hover:text-sky-400 transition-colors py-0 px-1 select-none"
+              >
+                {Object.values(CURRENCIES).map((curr) => (
+                  <option key={curr.code} value={curr.code} className="bg-slate-950 text-slate-100">
+                    {curr.code} ({curr.symbol})
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* MVP Badge */}
+            <div className="hidden sm:flex items-center gap-2 text-xs font-semibold text-slate-400 bg-slate-900/60 px-3.5 py-1.5 rounded-full border border-slate-800">
+              <Sparkles className="h-3.5 w-3.5 text-amber-400 animate-pulse" />
+              <span>MVP Active</span>
+            </div>
           </div>
         </div>
       </header>

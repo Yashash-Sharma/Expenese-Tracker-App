@@ -3,9 +3,14 @@ import * as Icons from 'lucide-react';
 import { Edit2, Trash2 } from 'lucide-react';
 import { CATEGORY_META } from '../constants/categories';
 import { formatDate } from '../utils/dateHelpers';
+import { useExpenses } from '../context/ExpenseContext';
+import { formatCurrency } from '../constants/currencies';
 
 export default function ExpenseItem({ expense, onEdit, onDelete }) {
   const { id, amount, category, date, note, type = 'expense' } = expense;
+  
+  const { state } = useExpenses();
+  const { currency } = state;
   
   const meta = CATEGORY_META[category] || CATEGORY_META.Other;
   const IconComponent = Icons[meta.icon] || Icons.HelpCircle;
@@ -44,7 +49,7 @@ export default function ExpenseItem({ expense, onEdit, onDelete }) {
       <div className="flex items-center gap-4 shrink-0">
         {/* Amount */}
         <span className={`text-base font-bold tracking-tight ${isIncome ? 'text-emerald-400' : 'text-slate-100'}`}>
-          {isIncome ? '+' : '-'}₹{Number(amount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          {isIncome ? '+' : '-'}{formatCurrency(amount, currency)}
         </span>
 
         {/* Buttons */}

@@ -36,6 +36,32 @@ const storageService = {
       console.error("Failed to save expenses to storage:", e);
       return false;
     }
+  },
+
+  /**
+   * Loads currency code from localStorage.
+   * Defaults to 'INR' if not set.
+   * @returns {string}
+   */
+  getCurrency() {
+    try {
+      return localStorage.getItem("expense_tracker_currency") || "INR";
+    } catch (e) {
+      console.error("Failed to load currency from storage:", e);
+      return "INR";
+    }
+  },
+
+  /**
+   * Saves currency code to localStorage.
+   * @param {string} currencyCode 
+   */
+  setCurrency(currencyCode) {
+    try {
+      localStorage.setItem("expense_tracker_currency", currencyCode);
+    } catch (e) {
+      console.error("Failed to save currency to storage:", e);
+    }
   }
 };
 

@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useExpenses } from '../context/ExpenseContext';
 import { MessageSquare, Send, X, Bot, Sparkles, TrendingUp, AlertCircle, RefreshCw, Key, Settings, Trash2 } from 'lucide-react';
+import { CURRENCIES } from '../constants/currencies';
 const formatMessageText = (text) => {
   if (!text) return null;
   const lines = text.split('\n');
@@ -52,7 +53,7 @@ const formatMessageText = (text) => {
 
 export default function Chatbot() {
   const { state } = useExpenses();
-  const { expenses } = state;
+  const { expenses, currency } = state;
   const [isOpen, setIsOpen] = useState(false);
   const [apiKey, setApiKey] = useState(
     import.meta.env.VITE_GEMINI_API_KEY || 
@@ -145,6 +146,7 @@ export default function Chatbot() {
 
   const callGeminiApi = async (userMsg, key) => {
     const stats = getFinancialStats();
+    const activeCurrency = CURRENCIES[currency] || CURRENCIES.INR;
     
     const systemPrompt = `You are ExpenBot, a professional personal financial advisor built into the "ExpenSense" expense tracking app.
 Your job is to help users understand their spending habits, analyze their ledger, calculate financial metrics, and give practical, encouraging financial advice.
@@ -156,15 +158,15 @@ Guidelines:
 - If they ask about specific categories or summaries, do the math based on the data.
 - Do not make up transactions that do not exist.
 - Keep your response under 150 words unless detail is specifically requested.
-- Always use the Indian Rupee symbol (₹) for all monetary values.
+- Always use the currency symbol (${activeCurrency.symbol}) and currency code (${activeCurrency.code}) for all monetary values.
 - Today's local date is: ${new Date().toISOString().split('T')[0]}.
 
 User's Transaction Ledger Data (Today's Transactions):
-- Net Balance: ₹${stats.netBalance.toFixed(2)}
-- Total Income: ₹${stats.totalIncome.toFixed(2)}
-- Total Expenses: ₹${stats.totalExpense.toFixed(2)}
+- Net Balance: ${activeCurrency.symbol}${stats.netBalance.toFixed(2)}
+- Total Income: ${activeCurrency.symbol}${stats.totalIncome.toFixed(2)}
+- Total Expenses: ${activeCurrency.symbol}${stats.totalExpense.toFixed(2)}
 - Savings Rate: ${stats.savingsRate}%
-- Top Category: ${stats.topCategory} (₹${stats.topAmount.toFixed(2)})
+- Top Category: ${stats.topCategory} (${activeCurrency.symbol}${stats.topAmount.toFixed(2)})
 - Full Transaction List: ${JSON.stringify(stats.transactions)}
 
 (Note: transaction type is either "income" or "expense". Category is one of Food, Transport, Shopping, Bills, Health, Entertainment, Other.)
